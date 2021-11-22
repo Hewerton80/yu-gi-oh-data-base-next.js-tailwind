@@ -15,7 +15,6 @@ import { SearchTypeCardOptionsEnum, TypeCardOptionsEnum, typeCardValueOptionsEnu
 
 const Home: NextPage = () => {
 
-
   const {
     cardsRecoreds,
     isLoadingsCards,
@@ -205,7 +204,7 @@ const Home: NextPage = () => {
                       cardsRecoreds?.cards?.map((card, i) => (
                         <li
                           key={card?.id}
-                          className={`flex w-full border-gray-600 border-b-2 p${i ? 'y' : 'b'}-4`}
+                          className={`flex w-full border-gray-600 border-b-2 ${i ? 'py-4' : 'pb-4'}`}
                         >
                           <img
                             src={card.card_images?.[0].image_url_small}
@@ -213,7 +212,6 @@ const Home: NextPage = () => {
                             width={96}
                             height={14.57}
                             loading='lazy'
-
                           />
                           <div className='flex flex-col w-full h-full ml-3'>
 
