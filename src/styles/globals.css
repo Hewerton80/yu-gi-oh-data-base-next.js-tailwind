@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+    * {
+        @apply box-border m-0 p-0;
+    }
+
+    body{
+        @apply bg-black-100;
+    }
+
+    a {
+        @apply no-underline cursor-pointer;
+    }
+
+    button {
+        @apply cursor-pointer;
+    }
+    
+    ul {
+        @apply list-none;
+    }
+}
