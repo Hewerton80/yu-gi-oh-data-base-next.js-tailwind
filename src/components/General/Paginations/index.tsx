@@ -49,7 +49,7 @@ function Paginations({ className, totalPages, currentPage, totalRecords, disable
                       <PaginationButton className={i > 0 ? 'border-l-0 ' : ''}
                         active={currentPage === page + 1}
                         disabled={disabled}
-                        onClick={() => onChangePage(page + 1)}
+                        onClick={() => i + 1 !== currentPage && onChangePage(page + 1)}
                       >
                         {page + 1}
                       </PaginationButton>

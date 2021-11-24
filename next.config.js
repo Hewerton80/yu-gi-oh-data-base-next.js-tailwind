@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
   async redirects() {
@@ -12,6 +11,6 @@ module.exports = {
   },
   images: {
     loader: 'imgix',
-    path: '/',
+    path: '',
   },
 }

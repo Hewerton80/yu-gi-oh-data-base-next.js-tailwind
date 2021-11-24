@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { yugiohApi } from "../services/yugiohApi";
 import { ICard, TypeCardEnum } from "../types/Card";
-
 export interface ICardRecords {
     cards: ICard[];
     rowsPerPage: number
@@ -14,10 +13,10 @@ export interface ICardQueryParans extends ICard {
     num?: number;
 }
 export function useCardInfo() {
+
     const [cardsRecoreds, setCardsRecoreds] = useState<ICardRecords | undefined>(undefined);
     const [isLoadingsCards, setIsLoadingsCards] = useState(false);
     const [isNotFoundCards, setIsNotFoundCards] = useState(false);
-
 
     const getCards = useCallback(async (cardQueryParans: ICardQueryParans) => {
         setIsLoadingsCards(true)
@@ -39,9 +38,9 @@ export function useCardInfo() {
             })
         }
         catch (err: any) {
-            if(err?.response?.status === 400){
+            if (err?.response?.status === 400) {
                 console.log(err?.response?.data?.error)
-                if(err?.response?.data?.error === 'No card matching your query was found in the database. Please see https://db.ygoprodeck.com/api-guide/ for syntax usage.'){
+                if (err?.response?.data?.error === 'No card matching your query was found in the database. Please see https://db.ygoprodeck.com/api-guide/ for syntax usage.') {
                     setIsNotFoundCards(true);
                 }
             }

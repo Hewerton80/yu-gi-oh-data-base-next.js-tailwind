@@ -9,7 +9,7 @@ export function Button({ children, className, ...rest }: ButtonProps) {
       {...rest}
       className={concatenateClasseName(`
         flex items-center justify-center
-        text-secondary text-sm px-3 text-white
+        font-sans text-sm px-3 text-white
         bg-primary h-9 w-max rounded-sm hover:opacity-80 duration-300
       `,className)}
     >

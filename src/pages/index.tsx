@@ -1,16 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
 import type { NextPage } from 'next'
-import { FormEvent, useCallback, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { Button } from '../components/General/Buttons/Button'
 import InputText from '../components/General/Inputs/InputText'
 import Select from '../components/General/Inputs/Select'
-import { Col, Grid } from '../components/General/Layouts/Grid'
+// import { Col, Grid } from '../components/General/Layouts/Grid'
 import NoutFoundMenssage from '../components/General/Layouts/NoutFoundMenssage'
+import Shimmer from '../components/General/Layouts/Shimmer'
 import Paginations from '../components/General/Paginations'
-
+import Image from 'next/image'
 import { DefaultsTemplate } from '../components/Templates/DefaultsTemplate'
 import { ICardQueryParans, useCardInfo } from '../hooks/useCardInfo'
 import { SearchTypeCardOptionsEnum, TypeCardOptionsEnum, typeCardValueOptionsEnum } from '../types/SearchTypeCardOptions';
+import Figure from '../components/General/Figure'
+import Checkbox from '../components/General/Inputs/Checkbox'
+import { attributesCheckOptions, IAttributeCheck } from '../types/AttributesCheckOptions'
+import { RaceCardEnum, TypeAttributeMonsterEnum, TypeCardEnum } from '../types/Card'
+import { isNumber, isString } from '../utilts/isType'
+import { IconCheck, iconsCheckOptions } from '../types/IncosCheckOptions'
 
 
 const Home: NextPage = () => {
@@ -28,14 +35,26 @@ const Home: NextPage = () => {
   const [prevKeyWordCard, setPrevKeyWordCard] = useState('');
   const [prevSearchBy, setPrevSearchBy] = useState<SearchTypeCardOptionsEnum>(SearchTypeCardOptionsEnum.SearchByName);
   const [prevTypeCard, setPrevTypeCard] = useState('');
+  const [prevAttributesCheckeds, setPrevAttributesCheckeds] = useState<IAttributeCheck[]>(attributesCheckOptions);
+  const [prevIconsCheckeds, setPrevIconsCheckeds] = useState<IconCheck[]>(iconsCheckOptions);
 
   const [keyWordCard, setKeyWordCard] = useState('');
   const [searchBy, setSearchBy] = useState<SearchTypeCardOptionsEnum>(SearchTypeCardOptionsEnum.SearchByName);
   const [typeCard, setTypeCard] = useState('');
+  const [attributesCheckeds, setAttributesCheckeds] = useState('');
+  const [iconsCheckeds, setIconsCheckeds] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
+
+  const isDisableAttributesCheckeds = useMemo(() => {
+    return prevTypeCard === TypeCardEnum.SpellCard || prevTypeCard === TypeCardEnum.TrapCard
+  }, [prevTypeCard]);
+
+  const isDisableIconsCheckeds = useMemo(() => {
+    return prevTypeCard.includes('Monster')
+  }, [prevTypeCard]);
 
   useEffect(() => {
     getCards({ page: 1 });
@@ -50,6 +69,9 @@ const Home: NextPage = () => {
 
   const getCardsPrevFilters = useCallback(() => {
     const cardsFilter: ICardQueryParans = {}
+    const attribute = prevAttributesCheckeds.filter(att => att.checked).map(att => att.attribute.toUpperCase()).join(',');
+    const race = prevIconsCheckeds.filter(icons => icons.checked).map(icons => icons.icon.toUpperCase()).join(',');
+    //key word
     if (prevKeyWordCard?.trim()) {
       if (prevSearchBy === SearchTypeCardOptionsEnum.SearchByName) {
         cardsFilter.fname = prevKeyWordCard.trim();
@@ -64,9 +86,11 @@ const Home: NextPage = () => {
         cardsFilter.id = prevKeyWordCard.trim();
       }
       setSearchBy(prevSearchBy)
-      setKeyWordCard(prevKeyWordCard.trim());
     }
+    setKeyWordCard(prevKeyWordCard.trim());
 
+    
+    // card type
     if (prevTypeCard) {
       cardsFilter.type = prevTypeCard;
       setTypeCard(prevTypeCard);
@@ -75,11 +99,33 @@ const Home: NextPage = () => {
       setTypeCard('');
     }
 
+    //attribute
+    if (attribute && !isDisableAttributesCheckeds) {
+      cardsFilter.attribute = attribute;
+      setAttributesCheckeds(attribute);
+    }
+    else {
+      setAttributesCheckeds('');
+    }
+
+    //race
+    if (race && !isDisableIconsCheckeds) {
+      cardsFilter.race = race;
+      setIconsCheckeds(race);
+    }
+    else {
+      setIconsCheckeds('');
+    }
+
     return cardsFilter;
   }, [
     prevKeyWordCard,
     prevSearchBy,
-    prevTypeCard
+    prevTypeCard,
+    prevAttributesCheckeds,
+    isDisableAttributesCheckeds,
+    isDisableIconsCheckeds,
+    prevIconsCheckeds  
   ]);
 
   const getCardsFilters = useCallback(() => {
@@ -101,16 +147,20 @@ const Home: NextPage = () => {
     if (typeCard) {
       cardsFilter.type = typeCard;
     }
+    if (attributesCheckeds) {
+      cardsFilter.attribute = attributesCheckeds;
+    }
+    if (iconsCheckeds) {
+      cardsFilter.race = iconsCheckeds;
+    }
     return cardsFilter;
   }, [
     keyWordCard,
     searchBy,
-    typeCard
+    typeCard,
+    attributesCheckeds,
+    iconsCheckeds
   ]);
-
-  useEffect(() => {
-    console.log('typeCard: ', typeCard)
-  }, [typeCard])
 
   const handlechangePage = useCallback((page) => {
     setCurrentPage(page)
@@ -119,6 +169,28 @@ const Home: NextPage = () => {
       ...getCardsFilters()
     })
   }, [getCards, getCardsFilters])
+
+  const handleCheckAttribute = useCallback(({ attribute, checked }: { attribute: TypeAttributeMonsterEnum, checked: boolean }) => {
+    setPrevAttributesCheckeds(currentPrevAttributesCheckeds => {
+      const currentPrevAttributesCheckedsTmp = [...currentPrevAttributesCheckeds]
+      const indexAttribute = currentPrevAttributesCheckeds.findIndex(att => att.attribute === attribute)
+      if (indexAttribute !== -1) {
+        currentPrevAttributesCheckedsTmp[indexAttribute].checked = checked;
+      }
+      return currentPrevAttributesCheckedsTmp;
+    })
+  }, [])
+
+  const handleCheckIcons = useCallback(({ icon, checked }: { icon: RaceCardEnum, checked: boolean }) => {
+    setPrevIconsCheckeds(currentPrevIconsCheckeds => {
+      const indexIcon = currentPrevIconsCheckeds.findIndex(iconCheck => iconCheck.icon === icon)
+      const currentPrevIconsCheckedsTmp = [...currentPrevIconsCheckeds]
+      if (indexIcon !== -1) {
+        currentPrevIconsCheckedsTmp[indexIcon].checked = checked;
+      }
+      return currentPrevIconsCheckedsTmp;
+    })
+  }, [])
 
   const handleSubmitFilter = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -135,10 +207,10 @@ const Home: NextPage = () => {
 
         <div className='w-full bg-black-800 my-6'>
           <form
-            className='flex w-full'
+            className='flex flex-col p-3 w-full space-y-1.5'
             onSubmit={handleSubmitFilter}
           >
-            <div className='flex py-3 px-3 space-x-5 w-full'>
+            <div className='flex space-x-5 w-full border-b-1 border-gray-600 pb-3'>
               {/* <Grid columnGap={5}>
             <Col xs={3}> */}
               <InputText
@@ -182,36 +254,136 @@ const Home: NextPage = () => {
               {/* </Col>
           </Grid> */}
             </div>
+
+            <div className='flex flex-col space-y-2'>
+              <div className='flex'>
+                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-white border-r-1 border-gray-600'>
+                  Atributo:
+                </span>
+                <div className='flex flex-wrap'>
+                  {
+                    prevAttributesCheckeds.map(attributeCheck => (
+
+                      <Checkbox
+                        id={attributeCheck.attribute}
+                        key={attributeCheck.attribute}
+                        className='mr-3'
+                        checked={attributeCheck.checked}
+                        disabled={isDisableAttributesCheckeds}
+                        onChange={event => handleCheckAttribute({
+                          attribute: attributeCheck.attribute,
+                          checked: event.target.checked
+                        })}
+                      >
+                        <Figure
+                          className='mr-1'
+                          imgProps={{
+                            src: `/imgs/attribute_icon_${attributeCheck.attribute.toLowerCase()}.png`,
+                            alt: attributeCheck.attribute,
+                            width: 18,
+                            height: 18,
+                            loading: 'lazy'
+
+                          }}
+                        />
+                        {attributeCheck.text}
+                      </Checkbox>
+                    ))
+                  }
+                </div>
+              </div>
+              <div className='flex'>
+                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-white border-r-1 border-gray-600'>
+                  Ícone:
+                </span>
+                <div className='flex flex-wrap'>
+                  {
+                    prevIconsCheckeds.map(iconCheck => (
+
+                      <Checkbox
+                        id={iconCheck.icon}
+                        key={iconCheck.icon}
+                        className='mr-3'
+                        checked={iconCheck.checked}
+                        disabled={isDisableIconsCheckeds}
+                        onChange={event => handleCheckIcons({
+                          icon: iconCheck.icon,
+                          checked: event.target.checked
+                        })}
+                      >
+                        {
+                          iconCheck?.icon !== RaceCardEnum.Normal && (
+                            <Figure
+                              className='mr-1'
+                              imgProps={{
+                                src: `/imgs/effect_icon_${iconCheck?.icon?.toLowerCase()}.png`,
+                                alt: iconCheck?.icon,
+                                width: 18,
+                                height: 18,
+                                loading: 'lazy'
+                              }}
+                            />
+                          )
+                        }
+                        {iconCheck.text}
+                      </Checkbox>
+                    ))
+                  }
+                </div>
+              </div>
+            </div>
           </form >
         </div>
 
         {
-          isNotFoundCards ?(
+          isNotFoundCards ? (
             <NoutFoundMenssage />
-          ): (
-              <>
-                <Paginations
-                  className='mb-4 items-end'
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  totalRecords={totalRecords}
-                  onChangePage={toPage => handlechangePage(toPage)}
-                  disabled={isLoadingsCards}
-                />
-                <div className='w-full bg-black-800 rounded-md border-gray-600 border-2 mb-4'>
-                  <ul className='flex w-full flex-col p-4'>
-                    {
+          ) : (
+            <>
+              <Paginations
+                className='mb-4 items-end'
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                onChangePage={toPage => handlechangePage(toPage)}
+                disabled={isLoadingsCards}
+              />
+              <div className='w-full bg-black-800 rounded-md border-gray-600 border-2 mb-4'>
+                <ul className='flex w-full flex-col p-4'>
+                  {
+                    isLoadingsCards ? (
+                      Array.from(Array(10).keys()).map(i => (
+                        <li
+                          key={i + 'schimmer'}
+                          className={`flex w-full border-gray-600 border-b-2 ${i > 0 ? 'pt-4' : 'pt-0'}`}
+                        >
+                          <Shimmer className='w-24 mb-4 h-sm-card' />
+                          <div className='flex flex-col w-full h-full ml-3'>
+                            <div className='flex pb-1 border-gray-600 border-b-1'>
+                              <Shimmer className='mb-3 w-52 h-3 rounded-lg' />
+                            </div>
+                            <div className='flex flex-col py-4 space-y-4 '>
+                              <Shimmer className='w-full h-2 rounded-lg' />
+                              <Shimmer className='w-full h-2 rounded-lg' />
+                              <Shimmer className='w-full h-2 rounded-lg' />
+                            </div>
+                          </div>
+                        </li>
+                      ))
+                    ) : (
                       cardsRecoreds?.cards?.map((card, i) => (
                         <li
                           key={card?.id}
-                          className={`flex w-full border-gray-600 border-b-2 ${i ? 'py-4' : 'pb-4'}`}
+                          className={`flex w-full border-gray-600 border-b-2 ${i > 0 ? 'pt-4' : 'pt-0'}`}
                         >
-                          <img
-                            src={card.card_images?.[0].image_url_small}
-                            alt={card?.name}
-                            width={96}
-                            height={14.57}
-                            loading='lazy'
+                          <Figure
+                            imgProps={{
+                              src: String(card.card_images?.[0].image_url_small),
+                              alt: card?.name,
+                              width: 96,
+                              height: 140.57,
+                              loading: 'eager'
+                            }}
                           />
                           <div className='flex flex-col w-full h-full ml-3'>
 
@@ -226,12 +398,15 @@ const Home: NextPage = () => {
                                 card?.attribute && (
                                   <span className='flex items-center text-white font-sans text-sm pr-3 border-gray-600 border-r-1'>
                                     {
-                                      <img
+                                      <Figure
                                         className='mr-1'
-                                        src={`/imgs/attribute_icon_${card?.attribute}.png`}
-                                        alt={card?.attribute}
-                                        width={18}
-                                        height={18}
+                                        imgProps={{
+                                          src: `/imgs/attribute_icon_${card?.attribute?.toLowerCase()}.png`,
+                                          alt: card?.attribute,
+                                          width: 18,
+                                          height: 18,
+                                          loading: 'lazy'
+                                        }}
                                       />
                                     }
                                     {card?.attribute}
@@ -242,12 +417,15 @@ const Home: NextPage = () => {
                               {
                                 !isMonster(card?.type) && (
                                   <span className='flex items-center text-white font-sans text-sm pr-3 border-gray-600 border-r-1'>
-                                    <img
+                                    <Figure
                                       className='mr-1'
-                                      src={`/imgs/attribute_icon_${isSpell(card?.type) ? 'spell' : isTrap(card?.type) ? 'spell' : ''}.png`}
-                                      alt={card?.type}
-                                      width={18}
-                                      height={18}
+                                      imgProps={{
+                                        src: `/imgs/attribute_icon_${isSpell(card?.type) ? 'spell' : isTrap(card?.type) ? 'spell' : ''}.png`,
+                                        alt: card?.type,
+                                        width: 18,
+                                        height: 18,
+                                        loading: 'lazy'
+                                      }}
                                     />
                                     {
                                       isSpell(card?.type) ? (
@@ -264,7 +442,21 @@ const Home: NextPage = () => {
 
                               {
                                 !isMonster(card?.type) && (
-                                  <span className='text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
+                                  <span className='flex items-center text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
+                                    {
+                                      card?.race !== RaceCardEnum.Normal && (
+                                        <Figure
+                                          className='mr-1'
+                                          imgProps={{
+                                            src: `/imgs/effect_icon_${card?.race?.toLowerCase()}.png`,
+                                            alt: 'race',
+                                            width: 18,
+                                            height: 18,
+                                            loading: 'lazy'
+                                          }}
+                                        />
+                                      )
+                                    }
                                     {card?.race}
                                   </span>
                                 )
@@ -272,7 +464,18 @@ const Home: NextPage = () => {
 
                               {
                                 card?.level && (
-                                  <span className='text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
+                                  <span className='flex items-center text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
+                                    <Figure
+                                      className='mr-1'
+                                      imgProps={{
+                                        src: `/imgs/icon_level.png`,
+                                        alt: card?.attribute,
+                                        width: 18,
+                                        height: 18,
+                                        loading: 'lazy'
+                                      }}
+                                    />
+
                                     Nível {card?.level}
                                   </span>
                                 )
@@ -286,7 +489,7 @@ const Home: NextPage = () => {
                                 )
                               }
                               {
-                                card?.atk && (
+                                (isNumber(card?.atk) || isString(card?.atk)) && (
                                   <span className='text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
                                     ATK {card?.atk}
                                   </span>
@@ -294,7 +497,7 @@ const Home: NextPage = () => {
                               }
 
                               {
-                                card?.def && (
+                                (isNumber(card?.atk) || isString(card?.atk)) && (
                                   <span className='text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
                                     DEF {card?.def}
                                   </span>
@@ -303,7 +506,7 @@ const Home: NextPage = () => {
 
                             </div>
 
-                            <div className='flex py-1'>
+                            <div className='flex flex-col py-1'>
                               <p className='text-white font-sans text-xs'>
                                 {card?.desc}
                               </p>
@@ -312,19 +515,20 @@ const Home: NextPage = () => {
                           </div>
                         </li>
                       ))
-                    }
-                  </ul>
-                </div>
-                <Paginations
-                  className='mb-14 items-start'
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  totalRecords={totalRecords}
-                  onChangePage={toPage => handlechangePage(toPage)}
-                  disabled={isLoadingsCards}
-                />
-              </>
-            )
+                    )
+                  }
+                </ul>
+              </div>
+              <Paginations
+                className='mb-14 items-start'
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalRecords={totalRecords}
+                onChangePage={toPage => handlechangePage(toPage)}
+                disabled={isLoadingsCards}
+              />
+            </>
+          )
         }
       </div>
     </DefaultsTemplate>

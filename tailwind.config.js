@@ -5,14 +5,16 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx}'
   ],
   safelist: [
-    /^pl-/, /^pt-/, /^pb-/, /^py/, /^border-/
+    /^pl-/, /^pt-/, /^pb-/, /^py-/, /^bg-/, /^border-/, /^opacity-/, /^cursor-/
   ],
-// [/^col-span-.*/]
+  // [/^col-span-.*/]
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       spacing: {
+        '0.25': '1px',
         'container': '42.5rem',
+        'sm-card': '8.7857rem',
         'fit-content': 'fit-content'
       },
 
@@ -51,6 +53,7 @@ module.exports = {
       opacity: ['disabled'],
       cursor: ['disabled'],
       pointerEvents: ['disabled'],
+      backgroundColor: ['checked'],
       // padding:['first'],
       // padding:['odd','even'],
       // paddingLeft:['odd','even'],

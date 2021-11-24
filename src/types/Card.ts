@@ -20,7 +20,7 @@ export enum TypeCardEnum {
     TrapCard = "Trap Card",
 }
 
-enum RaceCardEnum {
+export enum RaceCardEnum {
     //monster card
     Aqua = "Aqua",
     Beast = "Beast",
@@ -55,7 +55,7 @@ enum RaceCardEnum {
     Counter = "Counter"
 }
 
-enum TypeAttributeMonsterEnum {
+export enum TypeAttributeMonsterEnum {
     Dark = 'dark',
     Earth = 'earth',
     Fire = 'fire',
@@ -89,8 +89,8 @@ export interface ICard {
     def?: number | string;
     level?: number | string;
     scale?: string;
-    race?: RaceCardEnum;
-    attribute?: TypeAttributeMonsterEnum;
+    race?: RaceCardEnum | string;
+    attribute?: TypeAttributeMonsterEnum | string;
     archetype?: string;
     card_sets?: cardSet[];
     card_images?: cardImage[];
