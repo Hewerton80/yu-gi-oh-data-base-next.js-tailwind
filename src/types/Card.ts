@@ -45,6 +45,8 @@ export enum RaceCardEnum {
     Thunder = "Thunder",
     Warrior = "Warrior",
     WingedBeast = "Winged Beast",
+    Wyrm = "Wyrm",
+    Zombie = "Zombie",
     // spell and traps cards
     Normal = "Normal",
     Field = "Field",

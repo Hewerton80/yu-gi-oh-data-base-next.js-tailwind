@@ -8,7 +8,6 @@ import Select from '../components/General/Inputs/Select'
 import NoutFoundMenssage from '../components/General/Layouts/NoutFoundMenssage'
 import Shimmer from '../components/General/Layouts/Shimmer'
 import Paginations from '../components/General/Paginations'
-import Image from 'next/image'
 import { DefaultsTemplate } from '../components/Templates/DefaultsTemplate'
 import { ICardQueryParans, useCardInfo } from '../hooks/useCardInfo'
 import { SearchTypeCardOptionsEnum, TypeCardOptionsEnum, typeCardValueOptionsEnum } from '../types/SearchTypeCardOptions';
@@ -18,7 +17,7 @@ import { attributesCheckOptions, IAttributeCheck } from '../types/AttributesChec
 import { RaceCardEnum, TypeAttributeMonsterEnum, TypeCardEnum } from '../types/Card'
 import { isNumber, isString } from '../utilts/isType'
 import { IconCheck, iconsCheckOptions } from '../types/IncosCheckOptions'
-
+import { TypeMonstersCheck, typesCheckOptions } from '../types/TypeMonstersCheckOptions'
 
 const Home: NextPage = () => {
 
@@ -37,12 +36,14 @@ const Home: NextPage = () => {
   const [prevTypeCard, setPrevTypeCard] = useState('');
   const [prevAttributesCheckeds, setPrevAttributesCheckeds] = useState<IAttributeCheck[]>(attributesCheckOptions);
   const [prevIconsCheckeds, setPrevIconsCheckeds] = useState<IconCheck[]>(iconsCheckOptions);
+  const [prevTypesMonstersCheckeds, setPrevTypesMonstersCheckeds] = useState<TypeMonstersCheck[]>(typesCheckOptions);
 
   const [keyWordCard, setKeyWordCard] = useState('');
   const [searchBy, setSearchBy] = useState<SearchTypeCardOptionsEnum>(SearchTypeCardOptionsEnum.SearchByName);
   const [typeCard, setTypeCard] = useState('');
   const [attributesCheckeds, setAttributesCheckeds] = useState('');
   const [iconsCheckeds, setIconsCheckeds] = useState('');
+  const [typesMonstersCheckeds, setTypesMonstersCheckeds] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(10);
@@ -55,6 +56,10 @@ const Home: NextPage = () => {
   const isDisableIconsCheckeds = useMemo(() => {
     return prevTypeCard.includes('Monster')
   }, [prevTypeCard]);
+
+  const isDisableTypeCheckeds = useMemo(() => {
+    return isDisableAttributesCheckeds
+  }, [isDisableAttributesCheckeds]);
 
   useEffect(() => {
     getCards({ page: 1 });
@@ -71,6 +76,8 @@ const Home: NextPage = () => {
     const cardsFilter: ICardQueryParans = {}
     const attribute = prevAttributesCheckeds.filter(att => att.checked).map(att => att.attribute.toUpperCase()).join(',');
     const race = prevIconsCheckeds.filter(icons => icons.checked).map(icons => icons.icon.toUpperCase()).join(',');
+    const typeMonster = prevTypesMonstersCheckeds.filter(typeMonster => typeMonster.checked).map(icons => icons.type.toUpperCase()).join(',');
+    console.log('typeMonster: ',typeMonster)
     //key word
     if (prevKeyWordCard?.trim()) {
       if (prevSearchBy === SearchTypeCardOptionsEnum.SearchByName) {
@@ -89,7 +96,7 @@ const Home: NextPage = () => {
     }
     setKeyWordCard(prevKeyWordCard.trim());
 
-    
+
     // card type
     if (prevTypeCard) {
       cardsFilter.type = prevTypeCard;
@@ -117,6 +124,15 @@ const Home: NextPage = () => {
       setIconsCheckeds('');
     }
 
+    //typeMonsters
+    if (typeMonster && !isDisableTypeCheckeds) {
+      cardsFilter.race = typeMonster;
+      setTypesMonstersCheckeds(typeMonster);
+    }
+    else {
+      setTypesMonstersCheckeds('');
+    }
+
     return cardsFilter;
   }, [
     prevKeyWordCard,
@@ -125,7 +141,8 @@ const Home: NextPage = () => {
     prevAttributesCheckeds,
     isDisableAttributesCheckeds,
     isDisableIconsCheckeds,
-    prevIconsCheckeds  
+    isDisableTypeCheckeds,
+    prevIconsCheckeds
   ]);
 
   const getCardsFilters = useCallback(() => {
@@ -153,12 +170,16 @@ const Home: NextPage = () => {
     if (iconsCheckeds) {
       cardsFilter.race = iconsCheckeds;
     }
+    if (typesMonstersCheckeds) {
+      cardsFilter.race = typesMonstersCheckeds;
+    }
     return cardsFilter;
   }, [
     keyWordCard,
     searchBy,
     typeCard,
     attributesCheckeds,
+    typesMonstersCheckeds,
     iconsCheckeds
   ]);
 
@@ -189,6 +210,17 @@ const Home: NextPage = () => {
         currentPrevIconsCheckedsTmp[indexIcon].checked = checked;
       }
       return currentPrevIconsCheckedsTmp;
+    })
+  }, [])
+
+  const handleCheckTypes = useCallback(({ type, checked }: { type: RaceCardEnum, checked: boolean }) => {
+    setPrevTypesMonstersCheckeds(currentPrevTypesCheckeds => {
+      const indexIcon = currentPrevTypesCheckeds.findIndex(typeCheck => typeCheck.type === type)
+      const currentPrevTypesCheckedsTmp = [...currentPrevTypesCheckeds]
+      if (indexIcon !== -1) {
+        currentPrevTypesCheckedsTmp[indexIcon].checked = checked;
+      }
+      return currentPrevTypesCheckedsTmp;
     })
   }, [])
 
@@ -255,9 +287,10 @@ const Home: NextPage = () => {
           </Grid> */}
             </div>
 
-            <div className='flex flex-col space-y-2'>
-              <div className='flex'>
-                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-white border-r-1 border-gray-600'>
+            <div className='flex flex-col  space-y-2'>
+
+              <div className='flex border-b-1 border-gray-600'>
+                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white border-r-1 border-gray-600'>
                   Atributo:
                 </span>
                 <div className='flex flex-wrap'>
@@ -267,7 +300,7 @@ const Home: NextPage = () => {
                       <Checkbox
                         id={attributeCheck.attribute}
                         key={attributeCheck.attribute}
-                        className='mr-3'
+                        className='mr-3 mb-2'
                         checked={attributeCheck.checked}
                         disabled={isDisableAttributesCheckeds}
                         onChange={event => handleCheckAttribute({
@@ -292,8 +325,9 @@ const Home: NextPage = () => {
                   }
                 </div>
               </div>
-              <div className='flex'>
-                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-white border-r-1 border-gray-600'>
+
+              <div className='flex border-b-1 border-gray-600'>
+                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white border-r-1 border-gray-600'>
                   Ícone:
                 </span>
                 <div className='flex flex-wrap'>
@@ -303,7 +337,7 @@ const Home: NextPage = () => {
                       <Checkbox
                         id={iconCheck.icon}
                         key={iconCheck.icon}
-                        className='mr-3'
+                        className='mr-3 mb-2'
                         checked={iconCheck.checked}
                         disabled={isDisableIconsCheckeds}
                         onChange={event => handleCheckIcons({
@@ -331,6 +365,49 @@ const Home: NextPage = () => {
                   }
                 </div>
               </div>
+
+              <div className='flex'>
+                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white border-r-1 border-gray-600'>
+                  Tipo de Monstro:
+                </span>
+                <div className='flex flex-wrap'>
+                  {
+                    prevTypesMonstersCheckeds.map(typeCheck => (
+
+                      <Checkbox
+                        id={typeCheck.type}
+                        key={typeCheck.type}
+                        className='mr-2 mb-2'
+                        checked={typeCheck.checked}
+                        disabled={isDisableTypeCheckeds}
+                        onChange={event => handleCheckTypes({
+                          type: typeCheck.type,
+                          checked: event.target.checked
+                        })}
+                      >
+                        {/* {
+                          typeCheck?.type !== RaceCardEnum.Normal && (
+                            <Figure
+                              className='mr-1'
+                              imgProps={{
+                                src: `/imgs/effect_icon_${typeCheck?.type?.toLowerCase()}.png`,
+                                alt: typeCheck?.type,
+                                width: 18,
+                                height: 18,
+                                loading: 'lazy'
+                              }}
+                            />
+                          )
+                        } */}
+                        <span className='capitalize'>
+                          {typeCheck.text}
+                        </span>
+                      </Checkbox>
+                    ))
+                  }
+                </div>
+              </div>
+
             </div>
           </form >
         </div>
