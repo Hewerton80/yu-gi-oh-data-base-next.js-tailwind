@@ -24,7 +24,7 @@ function Checkbox({ children, className, ...rest }: CheckboxProps) {
         `}
         {...rest}
       />
-      <span className='flex h-full w-full items-center font-sans text-xs text-white uppercase'>
+      <span className='flex h-full w-full items-center font-sans text-xs sm:text-sm text-white uppercase'>
         {children}
       </span>
     </div>

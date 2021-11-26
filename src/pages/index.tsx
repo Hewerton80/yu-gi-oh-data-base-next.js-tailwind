@@ -292,8 +292,8 @@ const Home: NextPage = () => {
 
             <div className='flex flex-col  space-y-2'>
 
-              <div className='flex border-b-1 border-gray-600'>
-                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white border-r-1 border-gray-600'>
+              <div className='flex flex-col sm:flex-row border-b-1 border-gray-600'>
+                <span className='flex  pr-4 mr-4 h-full w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
                   Atributo:
                 </span>
                 <div className='flex flex-wrap'>
@@ -329,8 +329,8 @@ const Home: NextPage = () => {
                 </div>
               </div>
 
-              <div className='flex border-b-1 border-gray-600'>
-                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white border-r-1 border-gray-600'>
+              <div className='flex flex-col sm:flex-row border-b-1 border-gray-600'>
+                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
                   Ícone:
                 </span>
                 <div className='flex flex-wrap'>
@@ -369,8 +369,8 @@ const Home: NextPage = () => {
                 </div>
               </div>
 
-              <div className='flex'>
-                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white border-r-1 border-gray-600'>
+              <div className='flex flex-col sm:flex-row'>
+                <span className='flex pr-4 mr-4 h-full w-auto sm:w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
                   Tipo de Monstro:
                 </span>
                 <div className='flex flex-wrap'>
@@ -429,7 +429,7 @@ const Home: NextPage = () => {
                 onChangePage={toPage => handlechangePage(toPage)}
                 disabled={isLoadingsCards}
               />
-              <div className='w-full bg-black-800 rounded-md border-gray-600 border-2 mb-4'>
+              <div className='w-full bg-black-800 rounded-md border-gray-600 border-2 mb-4 overflow-hidden'>
                 <ul className='flex w-full flex-col p-4'>
                   {
                     isLoadingsCards ? (

@@ -18,7 +18,7 @@ export function PaginationButton({ children, className, active, ...rest }: Pagin
       disabled:cursor-default disabled:pointer-events-none
       `, className)}
     >
-      <span className='flex items-center justify-center w-full h-full text-xs text-white'>
+      <span className='flex items-center justify-center w-full h-full text-xs sm:text-sm text-white'>
         {children}
       </span>
     </button>
