@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import type { NextPage } from 'next'
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { Button } from '../components/General/Buttons/Button'
@@ -242,7 +241,11 @@ const Home: NextPage = () => {
             className='flex flex-col p-3 w-full space-y-1.5'
             onSubmit={handleSubmitFilter}
           >
-            <div className='flex space-x-5 w-full border-b-1 border-gray-600 pb-3'>
+            <div className={`
+              flex flex-col md:flex-row 
+              space-x-0 md:space-x-5 space-y-3 md:space-y-0
+              w-full border-b-1 border-gray-600 pb-3
+            `}>
               {/* <Grid columnGap={5}>
             <Col xs={3}> */}
               <InputText
@@ -418,7 +421,8 @@ const Home: NextPage = () => {
           ) : (
             <>
               <Paginations
-                className='mb-4 items-end'
+                className='mb-4 sm:items-end'
+                // className='mb-4 items-end'
                 currentPage={currentPage}
                 totalPages={totalPages}
                 totalRecords={totalRecords}

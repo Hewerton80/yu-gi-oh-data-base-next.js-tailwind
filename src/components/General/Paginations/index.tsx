@@ -14,26 +14,32 @@ function Paginations({ className, totalPages, currentPage, totalRecords, disable
 
   const arrayPagesItens = useMemo(() => {
 
-    let initialIndexPage = parseInt(String(currentPage / 10)) * 10;
+    const numButtonsToNavihate = 5;
+    let initialIndexPage = parseInt(String(currentPage / numButtonsToNavihate)) * numButtonsToNavihate;
     initialIndexPage = initialIndexPage > 0 ? initialIndexPage - 1 : 0;
 
     return Array.from(Array(totalPages).keys())
-      .slice(initialIndexPage, initialIndexPage + 10)
+      .slice(initialIndexPage, initialIndexPage + numButtonsToNavihate)
 
   }, [currentPage, totalPages])
 
   return (
     <div
       {...rest}
-      className={concatenateClasseName('flex justify-between', className)}
+      className={concatenateClasseName(
+        `flex flex-col sm:flex-row 
+        items-start
+       
+        justify-start sm:justify-between
+      `, className)}
     >
       {
         totalPages > 0 && (
           <>
-            <span className='text-white font-sans text-base leading-4'>
+            <span className='text-white font-sans text-xs sm:text-base leading-4 mb-2 sm:mb-0'>
               Resultados da Busca {((currentPage - 1) * 15) + 1} - {((currentPage - 1) * 15) + 15} de {totalRecords}
             </span>
-            <ul className='flex ml-auto'>
+            <ul className='flex'>
               <li>
                 <PaginationButton className={'border-r-0 '}
                   onClick={() => onChangePage(currentPage - 1)}
