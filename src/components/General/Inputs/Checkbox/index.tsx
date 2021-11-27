@@ -19,7 +19,7 @@ function Checkbox({ children, className, ...rest }: CheckboxProps) {
       <input
         type="checkbox"
         className={`
-          absolute z-20 opacity-0 w-full h-full checked:bg-primary
+          absolute z-20 left-0 opacity-0 w-full h-full checked:bg-primary 
           ${rest.disabled ? 'cursor-default' : 'cursor-pointer'}
         `}
         {...rest}

@@ -27,6 +27,7 @@ export function useCardInfo() {
                 params: {
                     ...cardQueryParans,
                     num: rowPerPage,
+                    language: 'pt',
                     offset: (Number(cardQueryParans?.page) - 1) * rowPerPage
                 }
             });

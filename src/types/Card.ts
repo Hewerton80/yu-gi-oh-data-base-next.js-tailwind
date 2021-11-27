@@ -1,4 +1,5 @@
 export enum TypeCardEnum {
+    //Main Deck Types
     EffectMonster = "Effect Monster",
     FlipEffectMonster = "Flip Effect Monster",
     FlipTunerEffectMonster = "Flip Tuner Effect Monster",
@@ -18,6 +19,15 @@ export enum TypeCardEnum {
     UnionEffectMonster = "Union Effect Monster",
     SpellCard = "Spell Card",
     TrapCard = "Trap Card",
+    //Extra Deck Types
+    FusionMonster = "Fusion Monster",
+    LinkMonster = "Link Monster",
+    PendulumEffectFusionMonster = "Pendulum Effect Fusion Monster",
+    SynchroMonster = "Synchro Monster",
+    SynchroPendulumEffectMonster = "Synchro Pendulum Effect Monster",
+    SynchroTunerMonster = "Synchro Tuner Monster",
+    XYZMonster = "XYZ Monster",
+    XYZPendulumEffectMonster = "XYZ Pendulum Effect Monster",
 }
 
 export enum RaceCardEnum {
@@ -84,7 +94,8 @@ export interface cardImage {
 export interface ICard {
     id?: number | string;
     name?: string;
-    fname?: string; // queryparan
+    fname?: string; // queryparan 
+    has_effect?: boolean; // queryparan 
     type?: TypeCardEnum | string;
     desc?: string;
     atk?: number | string;
