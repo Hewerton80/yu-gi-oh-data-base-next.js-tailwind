@@ -6,13 +6,6 @@ export interface TypeCardsCheck {
     checked: boolean;
     hasEffect?: boolean;
 }
-// const arrayTypeNormalMonstersCards = Object.values((TypeCardEnum))
-//     .filter(typeCard => typeCard.includes('Normal'))
-//     .join(',')
-
-// const arrayTypeEffectMonstersCards = Object.values((TypeCardEnum))
-//     .filter(typeCard => !typeCard.includes('Normal'))
-//     .join(',')
 
 export const typeCardsCheckOptions: TypeCardsCheck[] = [
     {
@@ -23,6 +16,56 @@ export const typeCardsCheckOptions: TypeCardsCheck[] = [
     {
         type: `${TypeCardEnum.FusionMonster},${TypeCardEnum.PendulumEffectFusionMonster}`,
         text: 'Fusão',
+        checked: false,
+    },
+    {
+        type: `${TypeCardEnum.SynchroMonster},${TypeCardEnum.SynchroPendulumEffectMonster},${TypeCardEnum.SynchroTunerMonster}`,
+        text: 'Sincro',
+        checked: false,
+    },
+    {
+        type: `${TypeCardEnum.XYZMonster},${TypeCardEnum.XYZPendulumEffectMonster}`,
+        text: 'Xyz',
+        checked: false,
+    },
+    {
+        type: TypeCardEnum.ToonMonster,
+        text: 'Toon',
+        checked: false,
+    },
+    {
+        type: TypeCardEnum.SpiritMonster,
+        text: 'Espírito',
+        checked: false,
+    },
+    {
+        type: TypeCardEnum.UnionEffectMonster,
+        text: 'Union',
+        checked: false,
+    },
+    {
+        type: TypeCardEnum.GeminiMonster,
+        text: 'Gêmeos',
+        checked: false,
+    },
+    {
+        type: TypeCardEnum.TunerMonster,
+        text: 'Regulador',
+        checked: false,
+    },
+    {
+        type: `${TypeCardEnum.FlipEffectMonster},${TypeCardEnum.FlipTunerEffectMonster}`,
+        text: 'Virar',
+        checked: false,
+    },
+    {
+        type: `${TypeCardEnum.PendulumEffectMonster},${TypeCardEnum.PendulumFlipEffectMonster},${TypeCardEnum.PendulumNormalMonster},${TypeCardEnum.PendulumTunerEffectMonster}`,
+        text: 'Pêndulo',
+        checked: false,
+    },
+    {
+        type: TypeCardEnum.LinkMonster,
+        text: 'Link',
         checked: false,
     },
 ]

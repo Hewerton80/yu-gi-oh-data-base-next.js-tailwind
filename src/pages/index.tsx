@@ -49,7 +49,7 @@ const Home: NextPage = () => {
   const [typesMonstersCheckeds, setTypesMonstersCheckeds] = useState('');
   const [typesCardsCheckeds, setTypesCardsCheckeds] = useState('');
   const [isNormalMonster, setIsNormalMonster] = useState(false);
-  const [isEffectMonster, setIsEffectMonster] = useState(false); 
+  const [isEffectMonster, setIsEffectMonster] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(10);
@@ -88,7 +88,7 @@ const Home: NextPage = () => {
     const race = prevIconsCheckeds.filter(icons => icons.checked).map(icons => icons.icon.toUpperCase()).join(',');
     const typeMonster = prevTypesMonstersCheckeds.filter(typeMonster => typeMonster.checked).map(typeMonster => typeMonster.type.toUpperCase()).join(',');
     const typeMonsterCards = prevTypesCardsCheckeds.filter(typeMonster => typeMonster.checked).map(Typecard => Typecard.type.toUpperCase()).join(',');
-    
+
     //key word
     if (prevKeyWordCard?.trim()) {
       if (prevSearchBy === SearchTypeCardOptionsEnum.SearchByName) {
@@ -145,12 +145,12 @@ const Home: NextPage = () => {
     }
 
     //typeCards
-    if(prevIsNormalMonster && !prevIsEffectMonster){
+    if (prevIsNormalMonster && !prevIsEffectMonster) {
       cardsFilter.has_effect = false;
       setIsNormalMonster(true)
       setIsEffectMonster(false)
     }
-    else if(!prevIsNormalMonster && prevIsEffectMonster){
+    else if (!prevIsNormalMonster && prevIsEffectMonster) {
       cardsFilter.has_effect = true;
       setIsNormalMonster(false)
       setIsEffectMonster(true)
@@ -160,7 +160,7 @@ const Home: NextPage = () => {
       setIsEffectMonster(false)
     }
 
-    if(typeMonsterCards && !isDisableTypeCardsCheckeds){
+    if (typeMonsterCards && !isDisableTypeCardsCheckeds) {
       cardsFilter.type = typeMonsterCards;
       setTypesCardsCheckeds(typeMonsterCards)
     }
@@ -219,7 +219,7 @@ const Home: NextPage = () => {
     if (!isNormalMonster && isEffectMonster) {
       cardsFilter.has_effect = true;
     }
-    if(typesCardsCheckeds){
+    if (typesCardsCheckeds) {
       cardsFilter.type = typesCardsCheckeds;
     }
     return cardsFilter;
@@ -549,7 +549,7 @@ const Home: NextPage = () => {
                       cardsRecoreds?.cards?.map((card, i) => (
                         <li
                           key={card?.id}
-                          className={`flex w-full border-gray-600 border-b-2 ${i > 0 ? 'pt-4' : 'pt-0'}`}
+                          className={`flex flex-col sm:flex-row  w-full border-gray-600 border-b-2 ${i > 0 ? 'pt-4' : 'pt-0'}`}
                         >
                           <Figure
                             imgProps={{
@@ -558,127 +558,132 @@ const Home: NextPage = () => {
                               width: 96,
                               height: 140.57,
                               loading: 'eager',
-                              quality:0.2,
+                              quality: 0.2,
                             }}
                           />
-                          <div className='flex flex-col w-full h-full ml-3'>
+                          <div className='flex flex-col w-full h-full ml-0 sm:ml-3'>
 
                             <div className='flex pb-1 border-gray-600 border-b-1'>
-                              <span className='text-white font-sans text-base font-bold'>
+                              <span className='text-white font-sans text-sm sm:text-base font-bold'>
                                 {card?.name}
                               </span>
                             </div>
 
-                            <div className='flex py-1 border-gray-600 border-b-1'>
-                              {
-                                card?.attribute && (
-                                  <span className='flex items-center text-white font-sans text-sm pr-3 border-gray-600 border-r-1'>
-                                    {
+                            <div className='flex flex-col sm:flex-row py-1 border-gray-600 border-b-1'>
+                              <div className='flex mb-1 sm:mb-0'>
+                                {
+                                  card?.attribute && (
+                                    <span className='flex items-center text-white font-sans text-xs sm:text-sm pr-3 border-gray-600 border-r-1'>
+                                      {
+                                        <Figure
+                                          className='mr-1'
+                                          imgProps={{
+                                            src: `/imgs/attribute_icon_${card?.attribute?.toLowerCase()}.png`,
+                                            alt: card?.attribute,
+                                            width: 18,
+                                            height: 18,
+                                            loading: 'lazy'
+                                          }}
+                                        />
+                                      }
+                                      {card?.attribute}
+                                    </span>
+                                  )
+                                }
+
+                                {
+                                  !isMonster(card?.type) && (
+                                    <span className='flex items-center text-white font-sans text-xs sm:text-sm pr-3 border-gray-600 border-r-1'>
                                       <Figure
                                         className='mr-1'
                                         imgProps={{
-                                          src: `/imgs/attribute_icon_${card?.attribute?.toLowerCase()}.png`,
+                                          src: `/imgs/attribute_icon_${isSpell(card?.type) ? 'spell' : isTrap(card?.type) ? 'spell' : ''}.png`,
+                                          alt: card?.type,
+                                          width: 18,
+                                          height: 18,
+                                          loading: 'lazy'
+                                        }}
+                                      />
+                                      {
+                                        isSpell(card?.type) ? (
+                                          'Spell'
+                                        ) : isTrap(card?.type) ? (
+                                          'Trap'
+                                        ) : (
+                                          <></>
+                                        )
+                                      }
+                                    </span>
+                                  )
+                                }
+
+                                {
+                                  !isMonster(card?.type) && (
+                                    <span className='flex items-center text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-1'>
+                                      {
+                                        card?.race !== RaceCardEnum.Normal && (
+                                          <Figure
+                                            className='mr-1'
+                                            imgProps={{
+                                              src: `/imgs/effect_icon_${card?.race?.toLowerCase()}.png`,
+                                              alt: 'race',
+                                              width: 18,
+                                              height: 18,
+                                              loading: 'lazy'
+                                            }}
+                                          />
+                                        )
+                                      }
+                                      {card?.race}
+                                    </span>
+                                  )
+                                }
+
+                                {
+                                  card?.level && (
+                                    <span className='flex items-center text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-1'>
+                                      <Figure
+                                        className='mr-1'
+                                        imgProps={{
+                                          src: `/imgs/icon_level.png`,
                                           alt: card?.attribute,
                                           width: 18,
                                           height: 18,
                                           loading: 'lazy'
                                         }}
                                       />
-                                    }
-                                    {card?.attribute}
-                                  </span>
-                                )
-                              }
 
-                              {
-                                !isMonster(card?.type) && (
-                                  <span className='flex items-center text-white font-sans text-sm pr-3 border-gray-600 border-r-1'>
-                                    <Figure
-                                      className='mr-1'
-                                      imgProps={{
-                                        src: `/imgs/attribute_icon_${isSpell(card?.type) ? 'spell' : isTrap(card?.type) ? 'spell' : ''}.png`,
-                                        alt: card?.type,
-                                        width: 18,
-                                        height: 18,
-                                        loading: 'lazy'
-                                      }}
-                                    />
-                                    {
-                                      isSpell(card?.type) ? (
-                                        'Spell'
-                                      ) : isTrap(card?.type) ? (
-                                        'Trap'
-                                      ) : (
-                                        <></>
-                                      )
-                                    }
-                                  </span>
-                                )
-                              }
+                                      Nível {card?.level}
+                                    </span>
+                                  )
+                                }
+                              </div>
+                              <div className='flex mb-1 sm:mb-0'>
+                                {
+                                  isMonster(card?.type) && (
+                                    <span className='text-white font-sans text-xs sm:text-sm px-0 sm:px-3 border-gray-600 border-r-0 sm:border-r-1'>
+                                      [ {card?.race} / {card?.type?.replace('Monster', '')?.trim()?.split(' ')?.join(' / ')} ]
+                                    </span>
+                                  )
+                                }
+                              </div>
+                              <div className='flex mb-1 sm:mb-0'>
+                                {
+                                  (isNumber(card?.atk) || isString(card?.atk)) && (
+                                    <span className='text-white font-sans text-xs sm:text-sm px-0 sm:px-3 border-gray-600 border-r-0 sm:border-r-1'>
+                                      ATK {card?.atk}
+                                    </span>
+                                  )
+                                }
 
-                              {
-                                !isMonster(card?.type) && (
-                                  <span className='flex items-center text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
-                                    {
-                                      card?.race !== RaceCardEnum.Normal && (
-                                        <Figure
-                                          className='mr-1'
-                                          imgProps={{
-                                            src: `/imgs/effect_icon_${card?.race?.toLowerCase()}.png`,
-                                            alt: 'race',
-                                            width: 18,
-                                            height: 18,
-                                            loading: 'lazy'
-                                          }}
-                                        />
-                                      )
-                                    }
-                                    {card?.race}
-                                  </span>
-                                )
-                              }
-
-                              {
-                                card?.level && (
-                                  <span className='flex items-center text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
-                                    <Figure
-                                      className='mr-1'
-                                      imgProps={{
-                                        src: `/imgs/icon_level.png`,
-                                        alt: card?.attribute,
-                                        width: 18,
-                                        height: 18,
-                                        loading: 'lazy'
-                                      }}
-                                    />
-
-                                    Nível {card?.level}
-                                  </span>
-                                )
-                              }
-
-                              {
-                                isMonster(card?.type) && (
-                                  <span className='text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
-                                    [ {card?.race} / {card?.type?.replace('Monster', '')?.trim()?.split(' ')?.join(' / ')} ]
-                                  </span>
-                                )
-                              }
-                              {
-                                (isNumber(card?.atk) || isString(card?.atk)) && (
-                                  <span className='text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
-                                    ATK {card?.atk}
-                                  </span>
-                                )
-                              }
-
-                              {
-                                (isNumber(card?.atk) || isString(card?.atk)) && (
-                                  <span className='text-white font-sans text-sm px-3 border-gray-600 border-r-1'>
-                                    DEF {card?.def}
-                                  </span>
-                                )
-                              }
+                                {
+                                  (isNumber(card?.atk) || isString(card?.atk)) && (
+                                    <span className='text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-0 sm:border-r-1'>
+                                      DEF {card?.def}
+                                    </span>
+                                  )
+                                }
+                              </div>
 
                             </div>
 
