@@ -5,23 +5,27 @@
 @layer base {
 
     * {
-        @apply box-border m-0 p-0;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
     }
 
     body{
-        @apply bg-black-100;
+        background-color: theme('colors.black-100.DEFAULT')
     }
 
     a {
-        @apply no-underline cursor-pointer;
+        text-decoration: none;
+        cursor: pointer;
     }
 
     button {
-        @apply cursor-pointer;
+        cursor: pointer;
     }
     
     ul {
-        @apply list-none;
+        list-style: none;
     }
 
 }
+

@@ -1,15 +1,28 @@
 
 module.exports = {
-  purge: [
+  content: [
     './src/pages/**/*.{js,ts,jsx,tsx}',
     './src/components/**/*.{js,ts,jsx,tsx}'
   ],
-  safelist: [
-    /^pl-/, /^pt-/, /^pb-/, /^py-/, /^bg-/, /^border-/, /^opacity-/, /^cursor-/,
-    /^basis-/, /^max-w/
-  ],
-  // [/^col-span-.*/]
-  darkMode: false, // or 'media' or 'class'
+  // corePlugins: [
+  //   'boxSizing',
+  //   'pl',
+  //   'pt',
+  //   'pb',
+  //   'py',
+  //   'bg',
+  //   'border',
+  //   'opacity',
+  //   'cursor',
+  //   'basis',
+  //   'max-w',
+  //   'flex',
+  //   'flex-row',
+  //   'flex-wrap',
+  //   'h-fit-content',
+  //   'grid-component'
+  // ],
+  // darkMode: false,
   theme: {
     extend: {
       spacing: {

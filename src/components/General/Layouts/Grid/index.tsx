@@ -29,8 +29,8 @@ export function Grid({ className, rowGap = 0, columnGap = 0, children, ...rest }
       {...rest}
       style={{
         width: `calc(100% + ${columnGap * 4}px)`,
-        marginTop: (rowGap * 4) * -1,
-        marginLeft: (columnGap * 4) * -1
+        marginLeft: (columnGap * 4) * -1,
+        marginTop: (rowGap * 4) * -1
       }}
     >
       {children}
@@ -38,15 +38,15 @@ export function Grid({ className, rowGap = 0, columnGap = 0, children, ...rest }
   );
 }
 
-export function Col({ 
-  className, 
-  children, 
-  xs = 12, 
+export function Col({
+  className,
+  children,
+  xs = 12,
   sm,
   md,
   lg,
   xl,
-  ...rest 
+  ...rest
 }: ColProps) {
   return (
     <div
@@ -64,31 +64,10 @@ export function Col({
         lg && `lg:max-w-${lg}/12`,
         xl && `xl:max-w-${xl}/12`,
         className)}
-      style={{
-        // flexBasis: `${Number(xs) / 12 * 100}%`,
-        // maxWidth: `${Number(xs) / 12 * 100}%`,
-      }}
       {...rest}
     >
       {children}
-      <span className='basis-12/12 max-w-12/12'></span>
+      {/* <span className='basis-12/12 md:max-w-3/12'></span> */}
     </div>
   )
 }
-// m={0}
-// flexDirection={'row'}
-// flexGrow={'0'}
-// flexBasis={{
-//   xs: xs && `${xs / 12 * 100}%`,
-//   sm: sm && `${sm / 12 * 100}%`,
-//   md: md && `${md / 12 * 100}%`,
-//   lg: lg && `${lg / 12 * 100}%`,
-//   xl: xl && `${xl / 12 * 100}%`,
-// }}
-// maxW={{
-//   xs: xs && `${xs / 12 * 100}%`,
-//   sm: sm && `${sm / 12 * 100}%`,
-//   md: md && `${md / 12 * 100}%`,
-//   lg: lg && `${lg / 12 * 100}%`,
-//   xl: xl && `${xl / 12 * 100}%`,
-// }}
