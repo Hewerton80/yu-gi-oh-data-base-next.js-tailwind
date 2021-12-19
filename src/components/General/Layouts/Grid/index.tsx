@@ -1,29 +1,36 @@
 import { HTMLAttributes } from 'react';
-import { concatenateClasseName } from '../../../../utilts/concatenateClasseName';
+import styles from './styles.module.css'
+import cn from 'classnames'
 
+type avaliablesWidthCols = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+type avaliablesGaps = 0 | 3 | 4 | 5
 interface GridProps extends HTMLAttributes<HTMLDivElement> {
-  columnGap?: number;
-  rowGap?: number;
+  columnGap?: avaliablesGaps;
+  rowGap?: avaliablesGaps;
 }
 
 interface ColProps extends HTMLAttributes<HTMLDivElement> {
-  xs?: number;
+  xs?: avaliablesWidthCols;
+  sm?: avaliablesWidthCols;
+  md?: avaliablesWidthCols;
+  lg?: avaliablesWidthCols;
+  xl?: avaliablesWidthCols;
 }
 
-export function Grid({ className, rowGap, columnGap, children, ...rest }: GridProps) {
+export function Grid({ className, rowGap = 0, columnGap = 0, children, ...rest }: GridProps) {
+
   return (
     <div
-    v-for="item in items"
-      className={concatenateClasseName(`
-        flex flex-wrap h-fit-content space-x-0
-        odd:pt-${rowGap || 0} odd:pl-${columnGap || 0}
-        even:pt-${rowGap || 0} even:pl-${columnGap || 0}
-      `, className)}
+      className={cn(
+        styles['grid-component'],
+        styles[`row-gap-${rowGap}`],
+        styles[`column-gap-${columnGap}`],
+        className)}
       {...rest}
       style={{
-        width: `calc(100% + ${columnGap}px)`,
-        marginTop: rowGap ? Number(rowGap) * -1 : 0,
-        marginLeft: columnGap ? Number(columnGap) * -1 : 0
+        width: `calc(100% + ${columnGap * 4}px)`,
+        marginTop: (rowGap * 4) * -1,
+        marginLeft: (columnGap * 4) * -1
       }}
     >
       {children}
@@ -31,19 +38,40 @@ export function Grid({ className, rowGap, columnGap, children, ...rest }: GridPr
   );
 }
 
-export function Col({ className, children, xs, ...rest }: ColProps) {
+export function Col({ 
+  className, 
+  children, 
+  xs = 12, 
+  sm,
+  md,
+  lg,
+  xl,
+  ...rest 
+}: ColProps) {
   return (
     <div
-      className={concatenateClasseName(`
-        m-0 flex-row flex-grow-0 
-      `, className)}
-      {...rest}
+      className={cn(
+        styles.col,
+        `basis-${xs}/12`,
+        sm && `basis-${sm}/12`,
+        md && `md:basis-${md}/12`,
+        lg && `lg:basis-${lg}/12`,
+        xl && `xl:basis-${xl}/12`,
+
+        `max-w-${xs}/12`,
+        sm && `max-w-${sm}/12`,
+        md && `md:max-w-${md}/12`,
+        lg && `lg:max-w-${lg}/12`,
+        xl && `xl:max-w-${xl}/12`,
+        className)}
       style={{
-        flexBasis: `${Number(xs || 12) / 12 * 100}%`,
-        maxWidth: `${Number(xs || 12) / 12 * 100}%`,
+        // flexBasis: `${Number(xs) / 12 * 100}%`,
+        // maxWidth: `${Number(xs) / 12 * 100}%`,
       }}
+      {...rest}
     >
       {children}
+      <span className='basis-12/12 max-w-12/12'></span>
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { Button } from '../components/General/Buttons/Button'
 import InputText from '../components/General/Inputs/InputText'
 import Select from '../components/General/Inputs/Select'
-// import { Col, Grid } from '../components/General/Layouts/Grid'
+import { Col, Grid } from '../components/General/Layouts/Grid'
 import NoutFoundMenssage from '../components/General/Layouts/NoutFoundMenssage'
 import Shimmer from '../components/General/Layouts/Shimmer'
 import Paginations from '../components/General/Paginations'
@@ -305,414 +305,415 @@ const Home: NextPage = () => {
             className='flex flex-col p-3 w-full space-y-1.5'
             onSubmit={handleSubmitFilter}
           >
+             {/* space-x-0 md:space-x-5 space-y-3 md:space-y-0 */}
             <div className={`
-              flex flex-col md:flex-row 
-              space-x-0 md:space-x-5 space-y-3 md:space-y-0
+              flex
+             
               w-full border-b-1 border-gray-600 pb-3
             `}>
-              {/* <Grid columnGap={5}>
-            <Col xs={3}> */}
-              <InputText
-                id='palavra-chave'
-                placeholder='Inserir Palavra-chave'
-                value={prevKeyWordCard}
-                onChange={event => setPrevKeyWordCard(event.target.value)}
-              />
-              {/* </Col>
-            <Col> */}
-              <Select
-                id='tipo-busca-carta-yu-gi-oh'
-                value={prevSearchBy}
-                onChange={event => setPrevSearchBy(event.target.value as SearchTypeCardOptionsEnum)}
-              >
-                <option value={SearchTypeCardOptionsEnum.SearchByName}>{SearchTypeCardOptionsEnum.SearchByName}</option>
-                <option value={SearchTypeCardOptionsEnum.SearchByDesc}>{SearchTypeCardOptionsEnum.SearchByDesc}</option>
-                <option value={SearchTypeCardOptionsEnum.SearchByPendulumEffect}>{SearchTypeCardOptionsEnum.SearchByPendulumEffect}</option>
-                <option value={SearchTypeCardOptionsEnum.SearchById}>{SearchTypeCardOptionsEnum.SearchById}</option>
-              </Select>
-              {/* </Col>
-            <Col xs={3}> */}
-              <Select
-                id='tipo-carta-yu-gi-oh'
-                value={prevTypeCard}
-                onChange={event => setPrevTypeCard(event.target.value)}
-              >
-                <option value={typeCardValueOptionsEnum[TypeCardOptionsEnum.AllCards]}>{TypeCardOptionsEnum.AllCards}</option>
-                <option value={typeCardValueOptionsEnum[TypeCardOptionsEnum.MonterCards]}>{TypeCardOptionsEnum.MonterCards}</option>
-                <option value={typeCardValueOptionsEnum[TypeCardOptionsEnum.SpellCards]}>{TypeCardOptionsEnum.SpellCards}</option>
-                <option value={typeCardValueOptionsEnum[TypeCardOptionsEnum.TrapCards]}>{TypeCardOptionsEnum.TrapCards}</option>
-              </Select>
-              {/* </Col>
-            <Col xs={3}> */}
-              <Button
-                type='submit'
-                disabled={isLoadingsCards}
-              >
-                Buscar
-              </Button>
-              {/* </Col>
-          </Grid> */}
+            <Grid columnGap={5} rowGap={3}>
+              <Col xs={12} md={3}>
+                <InputText
+                  id='palavra-chave'
+                  placeholder='Inserir Palavra-chave'
+                  value={prevKeyWordCard}
+                  onChange={event => setPrevKeyWordCard(event.target.value)}
+                />
+              </Col>
+              <Col xs={12} md={3}>
+                <Select
+                  id='tipo-busca-carta-yu-gi-oh'
+                  value={prevSearchBy}
+                  onChange={event => setPrevSearchBy(event.target.value as SearchTypeCardOptionsEnum)}
+                >
+                  <option value={SearchTypeCardOptionsEnum.SearchByName}>{SearchTypeCardOptionsEnum.SearchByName}</option>
+                  <option value={SearchTypeCardOptionsEnum.SearchByDesc}>{SearchTypeCardOptionsEnum.SearchByDesc}</option>
+                  <option value={SearchTypeCardOptionsEnum.SearchByPendulumEffect}>{SearchTypeCardOptionsEnum.SearchByPendulumEffect}</option>
+                  <option value={SearchTypeCardOptionsEnum.SearchById}>{SearchTypeCardOptionsEnum.SearchById}</option>
+                </Select>
+              </Col>
+              <Col xs={12} md={3}>
+                <Select
+                  id='tipo-carta-yu-gi-oh'
+                  value={prevTypeCard}
+                  onChange={event => setPrevTypeCard(event.target.value)}
+                >
+                  <option value={typeCardValueOptionsEnum[TypeCardOptionsEnum.AllCards]}>{TypeCardOptionsEnum.AllCards}</option>
+                  <option value={typeCardValueOptionsEnum[TypeCardOptionsEnum.MonterCards]}>{TypeCardOptionsEnum.MonterCards}</option>
+                  <option value={typeCardValueOptionsEnum[TypeCardOptionsEnum.SpellCards]}>{TypeCardOptionsEnum.SpellCards}</option>
+                  <option value={typeCardValueOptionsEnum[TypeCardOptionsEnum.TrapCards]}>{TypeCardOptionsEnum.TrapCards}</option>
+                </Select>
+              </Col>
+              <Col xs={12} md={3}>
+                <Button
+                  type='submit'
+                  disabled={isLoadingsCards}
+                >
+                  Buscar
+                </Button>
+              </Col>
+            </Grid>
+        </div>
+
+        <div className='flex flex-col  space-y-2'>
+
+          <div className='flex flex-col sm:flex-row border-b-1 border-gray-600'>
+            <span className='flex  pr-4 mr-4 h-full w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
+              Atributo:
+            </span>
+            <div className='flex flex-wrap'>
+              {
+                prevAttributesCheckeds.map(attributeCheck => (
+
+                  <Checkbox
+                    id={attributeCheck.attribute}
+                    key={attributeCheck.attribute}
+                    className='mr-3 mb-2'
+                    checked={attributeCheck.checked}
+                    disabled={isDisableAttributesCheckeds}
+                    onChange={event => handleCheckAttribute({
+                      attribute: attributeCheck.attribute,
+                      checked: event.target.checked
+                    })}
+                  >
+                    <Figure
+                      className='mr-1'
+                      imgProps={{
+                        src: `/imgs/attribute_icon_${attributeCheck.attribute.toLowerCase()}.png`,
+                        alt: attributeCheck.attribute,
+                        width: 18,
+                        height: 18,
+                        loading: 'lazy'
+
+                      }}
+                    />
+                    {attributeCheck.text}
+                  </Checkbox>
+                ))
+              }
             </div>
+          </div>
 
-            <div className='flex flex-col  space-y-2'>
+          <div className='flex flex-col sm:flex-row border-b-1 border-gray-600'>
+            <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
+              Ícone:
+            </span>
+            <div className='flex flex-wrap'>
+              {
+                prevIconsCheckeds.map(iconCheck => (
 
-              <div className='flex flex-col sm:flex-row border-b-1 border-gray-600'>
-                <span className='flex  pr-4 mr-4 h-full w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
-                  Atributo:
-                </span>
-                <div className='flex flex-wrap'>
-                  {
-                    prevAttributesCheckeds.map(attributeCheck => (
-
-                      <Checkbox
-                        id={attributeCheck.attribute}
-                        key={attributeCheck.attribute}
-                        className='mr-3 mb-2'
-                        checked={attributeCheck.checked}
-                        disabled={isDisableAttributesCheckeds}
-                        onChange={event => handleCheckAttribute({
-                          attribute: attributeCheck.attribute,
-                          checked: event.target.checked
-                        })}
-                      >
+                  <Checkbox
+                    id={iconCheck.icon}
+                    key={iconCheck.icon}
+                    className='mr-3 mb-2'
+                    checked={iconCheck.checked}
+                    disabled={isDisableIconsCheckeds}
+                    onChange={event => handleCheckIcons({
+                      icon: iconCheck.icon,
+                      checked: event.target.checked
+                    })}
+                  >
+                    {
+                      iconCheck?.icon !== RaceCardEnum.Normal && (
                         <Figure
                           className='mr-1'
                           imgProps={{
-                            src: `/imgs/attribute_icon_${attributeCheck.attribute.toLowerCase()}.png`,
-                            alt: attributeCheck.attribute,
+                            src: `/imgs/effect_icon_${iconCheck?.icon?.toLowerCase()}.png`,
+                            alt: iconCheck?.icon,
                             width: 18,
                             height: 18,
                             loading: 'lazy'
-
                           }}
                         />
-                        {attributeCheck.text}
-                      </Checkbox>
-                    ))
-                  }
-                </div>
-              </div>
-
-              <div className='flex flex-col sm:flex-row border-b-1 border-gray-600'>
-                <span className='flex pr-4 mr-4 h-full w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
-                  Ícone:
-                </span>
-                <div className='flex flex-wrap'>
-                  {
-                    prevIconsCheckeds.map(iconCheck => (
-
-                      <Checkbox
-                        id={iconCheck.icon}
-                        key={iconCheck.icon}
-                        className='mr-3 mb-2'
-                        checked={iconCheck.checked}
-                        disabled={isDisableIconsCheckeds}
-                        onChange={event => handleCheckIcons({
-                          icon: iconCheck.icon,
-                          checked: event.target.checked
-                        })}
-                      >
-                        {
-                          iconCheck?.icon !== RaceCardEnum.Normal && (
-                            <Figure
-                              className='mr-1'
-                              imgProps={{
-                                src: `/imgs/effect_icon_${iconCheck?.icon?.toLowerCase()}.png`,
-                                alt: iconCheck?.icon,
-                                width: 18,
-                                height: 18,
-                                loading: 'lazy'
-                              }}
-                            />
-                          )
-                        }
-                        {iconCheck.text}
-                      </Checkbox>
-                    ))
-                  }
-                </div>
-              </div>
-
-              <div className='flex flex-col sm:flex-row border-b-1 border-gray-600'>
-                <span className='flex pr-4 mr-4 h-full w-auto sm:w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
-                  Tipo de Monstro:
-                </span>
-                <div className='flex flex-wrap'>
-                  {
-                    prevTypesMonstersCheckeds.map(typeCheck => (
-                      <Checkbox
-                        id={typeCheck.type}
-                        key={typeCheck.type}
-                        className='mr-2 mb-2'
-                        checked={typeCheck.checked}
-                        disabled={isDisableTypeMonstersCheckeds}
-                        onChange={event => handleCheckTypesMonsters({
-                          typeMonster: typeCheck.type,
-                          checked: event.target.checked
-                        })}
-                      >
-                        <span className='capitalize'>
-                          {typeCheck.text}
-                        </span>
-                      </Checkbox>
-                    ))
-                  }
-                </div>
-              </div>
-
-              <div className='flex flex-col sm:flex-row'>
-                <span className='flex pr-4 mr-4 h-full w-auto sm:w-40 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
-                  Tipo de Card:
-                </span>
-                <div className='flex flex-wrap'>
-                  <Checkbox
-                    id='normal'
-                    className='mr-2 mb-2'
-                    checked={prevIsNormalMonster}
-                    disabled={isDisableTypeCardsCheckeds}
-                    onChange={event => setPrevIsNormalMonster(event.target.checked)}
-                  >
-                    <span className='capitalize'>Normal </span>
+                      )
+                    }
+                    {iconCheck.text}
                   </Checkbox>
-                  <Checkbox
-                    id='effect'
-                    className='mr-2 mb-2'
-                    checked={prevIsEffectMonster}
-                    disabled={isDisableTypeCardsCheckeds}
-                    onChange={event => setPrevIsEffectMonster(event.target.checked)}
-                  >
-                    <span className='capitalize'>Efeito </span>
-                  </Checkbox>
-                  {
-                    prevTypesCardsCheckeds.map(typeCardCheck => (
-                      <Checkbox
-                        id={typeCardCheck.type}
-                        key={typeCardCheck.type}
-                        className='mr-2 mb-2'
-                        checked={typeCardCheck.checked}
-                        disabled={isDisableTypeCardsCheckeds}
-                        onChange={event => handleCheckTypesCards({
-                          typeCard: typeCardCheck.type,
-                          checked: event.target.checked
-                        })}
-                      >
-                        <span className='capitalize'>
-                          {typeCardCheck.text}
-                        </span>
-                      </Checkbox>
-                    ))
-                  }
-                </div>
-              </div>
-
+                ))
+              }
             </div>
-          </form >
+          </div>
+
+          <div className='flex flex-col sm:flex-row border-b-1 border-gray-600'>
+            <span className='flex pr-4 mr-4 h-full w-auto sm:w-24 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
+              Tipo de Monstro:
+            </span>
+            <div className='flex flex-wrap'>
+              {
+                prevTypesMonstersCheckeds.map(typeCheck => (
+                  <Checkbox
+                    id={typeCheck.type}
+                    key={typeCheck.type}
+                    className='mr-2 mb-2'
+                    checked={typeCheck.checked}
+                    disabled={isDisableTypeMonstersCheckeds}
+                    onChange={event => handleCheckTypesMonsters({
+                      typeMonster: typeCheck.type,
+                      checked: event.target.checked
+                    })}
+                  >
+                    <span className='capitalize'>
+                      {typeCheck.text}
+                    </span>
+                  </Checkbox>
+                ))
+              }
+            </div>
+          </div>
+
+          <div className='flex flex-col sm:flex-row'>
+            <span className='flex pr-4 mr-4 h-full w-auto sm:w-40 font-sans text-sm text-white mb-2 sm:mb-0 border-r-0 sm:border-r-1 border-gray-600'>
+              Tipo de Card:
+            </span>
+            <div className='flex flex-wrap'>
+              <Checkbox
+                id='normal'
+                className='mr-2 mb-2'
+                checked={prevIsNormalMonster}
+                disabled={isDisableTypeCardsCheckeds}
+                onChange={event => setPrevIsNormalMonster(event.target.checked)}
+              >
+                <span className='capitalize'>Normal </span>
+              </Checkbox>
+              <Checkbox
+                id='effect'
+                className='mr-2 mb-2'
+                checked={prevIsEffectMonster}
+                disabled={isDisableTypeCardsCheckeds}
+                onChange={event => setPrevIsEffectMonster(event.target.checked)}
+              >
+                <span className='capitalize'>Efeito </span>
+              </Checkbox>
+              {
+                prevTypesCardsCheckeds.map(typeCardCheck => (
+                  <Checkbox
+                    id={typeCardCheck.type}
+                    key={typeCardCheck.type}
+                    className='mr-2 mb-2'
+                    checked={typeCardCheck.checked}
+                    disabled={isDisableTypeCardsCheckeds}
+                    onChange={event => handleCheckTypesCards({
+                      typeCard: typeCardCheck.type,
+                      checked: event.target.checked
+                    })}
+                  >
+                    <span className='capitalize'>
+                      {typeCardCheck.text}
+                    </span>
+                  </Checkbox>
+                ))
+              }
+            </div>
+          </div>
+
         </div>
+      </form >
+    </div>
 
         {
-          isNotFoundCards ? (
-            <NoutFoundMenssage />
-          ) : (
-            <>
-              <Paginations
-                className='mb-4 sm:items-end'
-                // className='mb-4 items-end'
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalRecords={totalRecords}
-                onChangePage={toPage => handlechangePage(toPage)}
-                disabled={isLoadingsCards}
-              />
-              <div className='w-full bg-black-800 rounded-md border-gray-600 border-2 mb-4 overflow-hidden'>
-                <ul className='flex w-full flex-col p-4'>
-                  {
-                    isLoadingsCards ? (
-                      Array.from(Array(10).keys()).map(i => (
-                        <li
-                          key={i + 'schimmer'}
-                          className={`flex w-full border-gray-600 border-b-2 ${i > 0 ? 'pt-4' : 'pt-0'}`}
-                        >
-                          <Shimmer className='w-24 mb-4 h-sm-card' />
-                          <div className='flex flex-col w-full h-full ml-3'>
-                            <div className='flex pb-1 border-gray-600 border-b-1'>
-                              <Shimmer className='mb-3 w-52 h-3 rounded-lg' />
-                            </div>
-                            <div className='flex flex-col py-4 space-y-4 '>
-                              <Shimmer className='w-full h-2 rounded-lg' />
-                              <Shimmer className='w-full h-2 rounded-lg' />
-                              <Shimmer className='w-full h-2 rounded-lg' />
-                            </div>
-                          </div>
-                        </li>
-                      ))
-                    ) : (
-                      cardsRecoreds?.cards?.map((card, i) => (
-                        <li
-                          key={card?.id}
-                          className={`flex flex-col sm:flex-row  w-full border-gray-600 border-b-2 ${i > 0 ? 'pt-4' : 'pt-0'}`}
-                        >
-                          <Figure
-                            imgProps={{
-                              src: String(card.card_images?.[0].image_url_small),
-                              alt: card?.name,
-                              width: 96,
-                              height: 140.57,
-                              loading: 'eager',
-                              quality: 0.2,
-                            }}
-                          />
-                          <div className='flex flex-col w-full h-full ml-0 sm:ml-3'>
+    isNotFoundCards ? (
+      <NoutFoundMenssage />
+    ) : (
+      <>
+        <Paginations
+          className='mb-4 sm:items-end'
+          // className='mb-4 items-end'
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          onChangePage={toPage => handlechangePage(toPage)}
+          disabled={isLoadingsCards}
+        />
+        <div className='w-full bg-black-800 rounded-md border-gray-600 border-2 mb-4 overflow-hidden'>
+          <ul className='flex w-full flex-col p-4'>
+            {
+              isLoadingsCards ? (
+                Array.from(Array(10).keys()).map(i => (
+                  <li
+                    key={i + 'schimmer'}
+                    className={`flex w-full border-gray-600 border-b-2 ${i > 0 ? 'pt-4' : 'pt-0'}`}
+                  >
+                    <Shimmer className='w-24 mb-4 h-sm-card' />
+                    <div className='flex flex-col w-full h-full ml-3'>
+                      <div className='flex pb-1 border-gray-600 border-b-1'>
+                        <Shimmer className='mb-3 w-52 h-3 rounded-lg' />
+                      </div>
+                      <div className='flex flex-col py-4 space-y-4 '>
+                        <Shimmer className='w-full h-2 rounded-lg' />
+                        <Shimmer className='w-full h-2 rounded-lg' />
+                        <Shimmer className='w-full h-2 rounded-lg' />
+                      </div>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                cardsRecoreds?.cards?.map((card, i) => (
+                  <li
+                    key={card?.id}
+                    className={`flex flex-col sm:flex-row  w-full border-gray-600 border-b-2 ${i > 0 ? 'pt-4' : 'pt-0'}`}
+                  >
+                    <Figure
+                      imgProps={{
+                        src: String(card.card_images?.[0].image_url_small),
+                        alt: card?.name,
+                        width: 96,
+                        height: 140.57,
+                        loading: 'eager',
+                        quality: 0.2,
+                      }}
+                    />
+                    <div className='flex flex-col w-full h-full ml-0 sm:ml-3'>
 
-                            <div className='flex pb-1 border-gray-600 border-b-1'>
-                              <span className='text-white font-sans text-sm sm:text-base font-bold'>
-                                {card?.name}
+                      <div className='flex pb-1 border-gray-600 border-b-1'>
+                        <span className='text-white font-sans text-sm sm:text-base font-bold'>
+                          {card?.name}
+                        </span>
+                      </div>
+
+                      <div className='flex flex-col sm:flex-row py-1 border-gray-600 border-b-1'>
+                        <div className='flex mb-1 sm:mb-0'>
+                          {
+                            card?.attribute && (
+                              <span className='flex items-center text-white font-sans text-xs sm:text-sm pr-3 border-gray-600 border-r-1'>
+                                {
+                                  <Figure
+                                    className='mr-1'
+                                    imgProps={{
+                                      src: `/imgs/attribute_icon_${card?.attribute?.toLowerCase()}.png`,
+                                      alt: card?.attribute,
+                                      width: 18,
+                                      height: 18,
+                                      loading: 'lazy'
+                                    }}
+                                  />
+                                }
+                                {card?.attribute}
                               </span>
-                            </div>
+                            )
+                          }
 
-                            <div className='flex flex-col sm:flex-row py-1 border-gray-600 border-b-1'>
-                              <div className='flex mb-1 sm:mb-0'>
+                          {
+                            !isMonster(card?.type) && (
+                              <span className='flex items-center text-white font-sans text-xs sm:text-sm pr-3 border-gray-600 border-r-1'>
+                                <Figure
+                                  className='mr-1'
+                                  imgProps={{
+                                    src: `/imgs/attribute_icon_${isSpell(card?.type) ? 'spell' : isTrap(card?.type) ? 'spell' : ''}.png`,
+                                    alt: card?.type,
+                                    width: 18,
+                                    height: 18,
+                                    loading: 'lazy'
+                                  }}
+                                />
                                 {
-                                  card?.attribute && (
-                                    <span className='flex items-center text-white font-sans text-xs sm:text-sm pr-3 border-gray-600 border-r-1'>
-                                      {
-                                        <Figure
-                                          className='mr-1'
-                                          imgProps={{
-                                            src: `/imgs/attribute_icon_${card?.attribute?.toLowerCase()}.png`,
-                                            alt: card?.attribute,
-                                            width: 18,
-                                            height: 18,
-                                            loading: 'lazy'
-                                          }}
-                                        />
-                                      }
-                                      {card?.attribute}
-                                    </span>
+                                  isSpell(card?.type) ? (
+                                    'Spell'
+                                  ) : isTrap(card?.type) ? (
+                                    'Trap'
+                                  ) : (
+                                    <></>
                                   )
                                 }
+                              </span>
+                            )
+                          }
 
+                          {
+                            !isMonster(card?.type) && (
+                              <span className='flex items-center text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-1'>
                                 {
-                                  !isMonster(card?.type) && (
-                                    <span className='flex items-center text-white font-sans text-xs sm:text-sm pr-3 border-gray-600 border-r-1'>
-                                      <Figure
-                                        className='mr-1'
-                                        imgProps={{
-                                          src: `/imgs/attribute_icon_${isSpell(card?.type) ? 'spell' : isTrap(card?.type) ? 'spell' : ''}.png`,
-                                          alt: card?.type,
-                                          width: 18,
-                                          height: 18,
-                                          loading: 'lazy'
-                                        }}
-                                      />
-                                      {
-                                        isSpell(card?.type) ? (
-                                          'Spell'
-                                        ) : isTrap(card?.type) ? (
-                                          'Trap'
-                                        ) : (
-                                          <></>
-                                        )
-                                      }
-                                    </span>
+                                  card?.race !== RaceCardEnum.Normal && (
+                                    <Figure
+                                      className='mr-1'
+                                      imgProps={{
+                                        src: `/imgs/effect_icon_${card?.race?.toLowerCase()}.png`,
+                                        alt: 'race',
+                                        width: 18,
+                                        height: 18,
+                                        loading: 'lazy'
+                                      }}
+                                    />
                                   )
                                 }
+                                {card?.race}
+                              </span>
+                            )
+                          }
 
-                                {
-                                  !isMonster(card?.type) && (
-                                    <span className='flex items-center text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-1'>
-                                      {
-                                        card?.race !== RaceCardEnum.Normal && (
-                                          <Figure
-                                            className='mr-1'
-                                            imgProps={{
-                                              src: `/imgs/effect_icon_${card?.race?.toLowerCase()}.png`,
-                                              alt: 'race',
-                                              width: 18,
-                                              height: 18,
-                                              loading: 'lazy'
-                                            }}
-                                          />
-                                        )
-                                      }
-                                      {card?.race}
-                                    </span>
-                                  )
-                                }
+                          {
+                            card?.level && (
+                              <span className='flex items-center text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-1'>
+                                <Figure
+                                  className='mr-1'
+                                  imgProps={{
+                                    src: `/imgs/icon_level.png`,
+                                    alt: card?.attribute,
+                                    width: 18,
+                                    height: 18,
+                                    loading: 'lazy'
+                                  }}
+                                />
 
-                                {
-                                  card?.level && (
-                                    <span className='flex items-center text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-1'>
-                                      <Figure
-                                        className='mr-1'
-                                        imgProps={{
-                                          src: `/imgs/icon_level.png`,
-                                          alt: card?.attribute,
-                                          width: 18,
-                                          height: 18,
-                                          loading: 'lazy'
-                                        }}
-                                      />
+                                Nível {card?.level}
+                              </span>
+                            )
+                          }
+                        </div>
+                        <div className='flex mb-1 sm:mb-0'>
+                          {
+                            isMonster(card?.type) && (
+                              <span className='text-white font-sans text-xs sm:text-sm px-0 sm:px-3 border-gray-600 border-r-0 sm:border-r-1'>
+                                [ {card?.race} / {card?.type?.replace('Monster', '')?.trim()?.split(' ')?.join(' / ')} ]
+                              </span>
+                            )
+                          }
+                        </div>
+                        <div className='flex mb-1 sm:mb-0'>
+                          {
+                            (isNumber(card?.atk) || isString(card?.atk)) && (
+                              <span className='text-white font-sans text-xs sm:text-sm px-0 sm:px-3 border-gray-600 border-r-0 sm:border-r-1'>
+                                ATK {card?.atk}
+                              </span>
+                            )
+                          }
 
-                                      Nível {card?.level}
-                                    </span>
-                                  )
-                                }
-                              </div>
-                              <div className='flex mb-1 sm:mb-0'>
-                                {
-                                  isMonster(card?.type) && (
-                                    <span className='text-white font-sans text-xs sm:text-sm px-0 sm:px-3 border-gray-600 border-r-0 sm:border-r-1'>
-                                      [ {card?.race} / {card?.type?.replace('Monster', '')?.trim()?.split(' ')?.join(' / ')} ]
-                                    </span>
-                                  )
-                                }
-                              </div>
-                              <div className='flex mb-1 sm:mb-0'>
-                                {
-                                  (isNumber(card?.atk) || isString(card?.atk)) && (
-                                    <span className='text-white font-sans text-xs sm:text-sm px-0 sm:px-3 border-gray-600 border-r-0 sm:border-r-1'>
-                                      ATK {card?.atk}
-                                    </span>
-                                  )
-                                }
+                          {
+                            (isNumber(card?.atk) || isString(card?.atk)) && (
+                              <span className='text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-0 sm:border-r-1'>
+                                DEF {card?.def}
+                              </span>
+                            )
+                          }
+                        </div>
 
-                                {
-                                  (isNumber(card?.atk) || isString(card?.atk)) && (
-                                    <span className='text-white font-sans text-xs sm:text-sm px-3 border-gray-600 border-r-0 sm:border-r-1'>
-                                      DEF {card?.def}
-                                    </span>
-                                  )
-                                }
-                              </div>
+                      </div>
 
-                            </div>
+                      <div className='flex flex-col py-1'>
+                        <p className='text-white font-sans text-xs'>
+                          {card?.desc}
+                        </p>
+                      </div>
 
-                            <div className='flex flex-col py-1'>
-                              <p className='text-white font-sans text-xs'>
-                                {card?.desc}
-                              </p>
-                            </div>
-
-                          </div>
-                        </li>
-                      ))
-                    )
-                  }
-                </ul>
-              </div>
-              <Paginations
-                className='mb-14 items-start'
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalRecords={totalRecords}
-                onChangePage={toPage => handlechangePage(toPage)}
-                disabled={isLoadingsCards}
-              />
-            </>
-          )
-        }
-      </div>
-    </DefaultsTemplate>
+                    </div>
+                  </li>
+                ))
+              )
+            }
+          </ul>
+        </div>
+        <Paginations
+          className='mb-14 items-start'
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalRecords={totalRecords}
+          onChangePage={toPage => handlechangePage(toPage)}
+          disabled={isLoadingsCards}
+        />
+      </>
+    )
+  }
+      </div >
+    </DefaultsTemplate >
   )
 }
 

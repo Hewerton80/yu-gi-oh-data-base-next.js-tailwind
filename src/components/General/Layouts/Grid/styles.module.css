@@ -1,0 +1,41 @@
+.grid-component {
+    @apply flex flex-row flex-wrap h-fit-content
+}
+
+.col {
+    @apply m-0 flex-row flex-grow-0
+}
+
+.grid-component.row-gap-0 > .col {
+    @apply pt-0
+}
+
+.grid-component.row-gap-3 > .col {
+    @apply pt-3
+}
+
+.grid-component.row-gap-4 > .col {
+    @apply pt-4
+}
+
+.grid-component.row-gap-5 > .col {
+    @apply pt-5
+}
+
+.grid-component.column-gap-0 > .col {
+    @apply pl-0
+}
+
+.grid-component.column-gap-3 > .col {
+    @apply pl-3
+}
+
+.grid-component.column-gap-4 > .col {
+    @apply pl-4
+}
+
+.grid-component.column-gap-5 > .col {
+    @apply pl-5
+} 
+
+
